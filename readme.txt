@@ -1,0 +1,1 @@
+The goal of this project is to facilitate easy access to SECXBRL.info's API from a .NET Application
