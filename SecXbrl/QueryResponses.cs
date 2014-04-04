@@ -77,21 +77,12 @@ namespace SevenShadow._28msec.SecXbrl
         public bool success { get; set; }
         public ApiException ApiException { get; set; }
 
-        public List<string> EntityRegistrantName { get; set; }
-        public List<string> CIK { get; set; }
 
-        public string Label { get; set; }
-        public string AccessionNumber { get; set; }
-        public string TableName { get; set; }
-        public string FormType { get; set; }
-        public string FiscalPeriod { get; set; }
-        public int? FiscalYear { get; set; }
-        public DateTime? AcceptanceDatetime { get; set; }
-        
         public string NetworkIdentifier { get; set; }
-        public string Disclosure { get; set; }
+        public string TableName { get; set; }
         public string Comment { get; set; }
-        public List<ModelStructureNode> ModelStructure { get; set; }
+        public List<FactTableItem> FactTable { get; set; }
+       
 
 
     }

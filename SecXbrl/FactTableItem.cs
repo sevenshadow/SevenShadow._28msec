@@ -14,6 +14,9 @@ namespace SevenShadow._28msec.SecXbrl
         public string Value { get; set; }
         public int Decimals { get; set; }
         public string Unit { get; set; }
+        public string EntityRegistrantName { get; set; }
+        public string ReportedConcept { get; set; }
+
         
     }
 }
