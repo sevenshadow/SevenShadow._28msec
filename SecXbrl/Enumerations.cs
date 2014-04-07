@@ -35,7 +35,12 @@ namespace SevenShadow._28msec.SecXbrl
 
         [Description("/_queries/public/api/facts.jq")]
         Facts = 5,
-        
+
+        [Description("/_queries/public/api/report-elements.jq")]
+        ReportElements = 6,
+
+        [Description("/_queries/public/api/facttable-for-report.jq")]
+        FactTableForReport = 7,
 
     }
 

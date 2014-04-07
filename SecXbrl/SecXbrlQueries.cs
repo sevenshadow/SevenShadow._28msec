@@ -219,7 +219,6 @@ namespace SevenShadow._28msec.SecXbrl
 
             if (token != "")
                 queryParams.Add("token", token);
-
             queryParams.Add("aid", accessionNumber);
             queryParams.Add("disclosure", disclosure);
             queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
@@ -262,6 +261,49 @@ namespace SevenShadow._28msec.SecXbrl
             ApiInvoker invoker = new ApiInvoker();
 
             ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Facts), "POST", request.QueryParams, null, new Dictionary<string, string>());
+
+            FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
+            modelResponse.RawApiResponse = response.RawApiResponse;
+            modelResponse.RawApiRequest = response.RawApiRequest;
+
+            return modelResponse;
+        }
+
+        #endregion
+
+        #region Facttable for Report
+
+        public FactResponse GetFactTableForReport(FactTableForReportRequest request)
+        {
+            ApiInvoker invoker = new ApiInvoker();
+
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.FactTableForReport), "POST", request.QueryParams, null, new Dictionary<string, string>());
+
+            FactResponse factResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
+            factResponse.RawApiResponse = response.RawApiResponse;
+            factResponse.RawApiRequest = response.RawApiRequest;
+
+            return factResponse;
+        }
+
+
+        #endregion
+
+        #region Report Elements
+
+        public FactResponse GetReportElements(string secXbrlHost, string accessionNumber, string token = "", bool onlyNames = false, Format format = Format.Json)
+        {
+            ApiInvoker invoker = new ApiInvoker();
+            var queryParams = new Dictionary<String, String>();
+
+            if (token != "")
+                queryParams.Add("token", token);
+            queryParams.Add("aid", accessionNumber);
+            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
+            queryParams.Add("onlyNames", onlyNames.ToString().ToLower());
+
+
+            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.ReportElements), "POST", queryParams, null, new Dictionary<string, string>());
 
             FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
             modelResponse.RawApiResponse = response.RawApiResponse;

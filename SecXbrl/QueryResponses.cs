@@ -12,9 +12,7 @@ namespace SevenShadow._28msec.SecXbrl
         public string RawApiResponse { get; set; }
         public bool success { get; set; }
         public List<SecEntity> Entities { get; set; }
-
         public ApiException ApiException { get; set; }
-
     }
 
     public class FilingResponse : IResponse
@@ -23,7 +21,6 @@ namespace SevenShadow._28msec.SecXbrl
         public string RawApiResponse { get; set; }
         public bool success { get; set; }
         public ApiException ApiException { get; set; }
-
         public string EntityRegistrantName { get; set; }
         public string CIK { get; set; }
         public string FormType { get; set; }
@@ -81,8 +78,19 @@ namespace SevenShadow._28msec.SecXbrl
         public string NetworkIdentifier { get; set; }
         public string TableName { get; set; }
         public string Comment { get; set; }
+        public ResponseStatistics Statistics { get; set; }
         public List<FactTableItem> FactTable { get; set; }
        
+
+
+    }
+
+    public class ResponseStatistics
+    {
+        public long NumFacts { get; set; }
+        public long TotalNumFacts { get; set; }
+        public long TotalNumArchives { get; set; }
+        public long TotalNumEntities { get; set; }
 
 
     }
