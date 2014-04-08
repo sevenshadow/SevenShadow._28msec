@@ -7,100 +7,116 @@ using SevenShadow._28msec;
 
 namespace SevenShadow._28msec.SecXbrl
 {
+    
     public class EntityRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
-        public string CIK { get; set; }
-        public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
+        public HttpVerb HttpVerb { get; set; }
         public Format Format { get; set; }
-        public Tag Tag { get; set; }
-        public string Ticker { get; set; }
+        public string[] Tag { get; set; }
+        public string[] CIK { get; set; }
+        public string[] Ticker { get; set; }
+        public string Token { get; set; }
+        
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
 
         public EntityRequest()
+            : base()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            Tag = new string[] { };
+            CIK = new string[] { };
+            Ticker = new string[] { };
+
         }
+        
         public Dictionary<string, string> QueryParams
         {
             get
             {
                 var queryParams = new Dictionary<String, String>();
-                if (this.Token != "")
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+
+                if (!string.IsNullOrEmpty(Token)) 
                     queryParams.Add("token", this.Token);
 
-                if (this.CIK != "")
-                    queryParams.Add("cik", this.CIK);
+                if (this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",",this.CIK));
 
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
 
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
 
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
-
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
-
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
 
                 return queryParams;
-
             }
         }
-
 
     }
 
     public class FilingRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
-        public string CIK { get; set; }
-        public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
+        public HttpVerb HttpVerb { get; set; }
         public Format Format { get; set; }
-        public Tag Tag { get; set; } 
-        public string Ticker { get; set; }
+        public string[] Tag { get; set; }
+        public string[] CIK { get; set; }
+        public string[] Ticker { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
+        public string Token { get; set; }
+        
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
 
         public FilingRequest()
+            : base()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            Tag = new string[] { };
+            CIK = new string[] { };
+            Ticker = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
+
         }
+
         public Dictionary<string, string> QueryParams
         {
             get
             {
                 var queryParams = new Dictionary<String, String>();
-                if (this.Token != "")
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+
+                if (!string.IsNullOrEmpty(Token))
                     queryParams.Add("token", this.Token);
+
+                if (this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
+
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
+
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
                 
-                if (this.CIK != "")
-                    queryParams.Add("cik", this.CIK);
-
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
-
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
-               
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
-
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
-
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
 
                 return queryParams;
-
+                
             }
         }
 
@@ -109,24 +125,42 @@ namespace SevenShadow._28msec.SecXbrl
 
     public class ComponentRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
-        public string SIC { get; set; }
-        public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
+        public HttpVerb HttpVerb { get; set; }
+        
         public Format Format { get; set; }
-        public Tag Tag { get; set; }
-        public string Ticker { get; set; }
-        public string AID { get; set; }
-        public string CID { get; set; }
-
-        public string Disclosure { get; set; }
-        public string Concept { get; set; }
+        public string[] Ticker { get; set; }
+        public string[] Tag { get; set; }
+        public string[] SIC { get; set; }
+        public string[] CIK { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
+        public string[] AID { get; set; }
+        public string[] CID { get; set; }
+        public string[] Disclosure { get; set; }
+        public string[] ReportElement { get; set; }
+        public string Token { get; set; }
+        
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
 
         public ComponentRequest()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            Ticker = new string[] { };
+            Tag = new string[] { };
+            SIC = new string[] { };
+            CIK = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
+            AID = new string[] { };
+            CID = new string[] { };
+            Disclosure = new string[] { };
+            ReportElement = new string[] { };
+       
         }
 
         public Dictionary<string, string> QueryParams
@@ -134,35 +168,102 @@ namespace SevenShadow._28msec.SecXbrl
             get
             {
                 var queryParams = new Dictionary<String, String>();
-                if (this.Token != "")
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+
+                if (!string.IsNullOrEmpty(Token))
                     queryParams.Add("token", this.Token);
-                if (this.AID != "")
-                    queryParams.Add("aid", this.AID);
-                if (this.CID != "")
-                    queryParams.Add("cid", this.CID);
-                if (this.Disclosure != "")
-                    queryParams.Add("disclosure", this.Disclosure);
-                if (this.Concept != "")
-                    queryParams.Add("concept", this.Concept);
 
-                if (this.SIC != "")
-                    queryParams.Add("cik", this.SIC);
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
 
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
+                if (this.SIC.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("sic", string.Join(",", this.SIC));
+                if (this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
 
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
 
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
+                if (this.AID.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("aid", string.Join(",", this.AID));
 
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+                if (this.CID.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cid", string.Join(",", this.CID));
+                if (this.Disclosure.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("disclosure", string.Join(",", this.Disclosure));
 
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
+                if (this.ReportElement.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("reportElement", string.Join(",", this.ReportElement));
+        
+                return queryParams;
 
+            }
+        }
+
+    }
+
+    public class ComponentDetailRequest : IRequest
+    {
+        public HttpVerb HttpVerb { get; set; }
+        public Format Format { get; set; }
+        public string[] AID { get; set; }
+        public string[] CID { get; set; }
+        public string[] CIK { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
+        public string[] Disclosure { get; set; }
+        public string Token { get; set; }
+       
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
+
+        public ComponentDetailRequest()
+        {
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            AID = new string[] { };
+            CID = new string[] { };
+            CIK = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
+            Disclosure = new string[] { };
+       
+        }
+
+        public Dictionary<string, string> QueryParams
+        {
+            get
+            {
+                var queryParams = new Dictionary<String, String>();
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+
+                if (!string.IsNullOrEmpty(Token))
+                    queryParams.Add("token", this.Token);
+
+                if (this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
+
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
+
+                if (this.AID.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("aid", string.Join(",", this.AID));
+
+                if (this.CID.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cid", string.Join(",", this.CID));
+                if (this.Disclosure.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("disclosure", string.Join(",", this.Disclosure));
+
+                
                 return queryParams;
 
             }
@@ -172,24 +273,38 @@ namespace SevenShadow._28msec.SecXbrl
 
     public class FactRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
         public Format Format { get; set; }
-        public string CIK { get; set; }
-        public string Ticker { get; set; }
-        public Tag Tag { get; set; }
-        public string SIC { get; set; }
-        public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
+        public string[] CIK { get; set; }
+        public string[] Ticker { get; set; }
+        public string[] Tag { get; set; }
+        public string[] SIC { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
+
         public string Concept { get; set; }
+
+        public HttpVerb HttpVerb { get; set; }
+        public string SecXbrlHost { get; set; }
+        public string Token { get; set; }
         public string Map { get; set; }
         public string PrefixDimension { get; set; }
         public string PrefixDimensionDefault { get; set; }
 
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
+
         public FactRequest()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            CIK = new string[] { };
+            Ticker = new string[] { };
+            Tag = new string[] { };
+            SIC = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
         }
 
         public Dictionary<string, string> QueryParams
@@ -197,36 +312,35 @@ namespace SevenShadow._28msec.SecXbrl
             get
             {
                 var queryParams = new Dictionary<String, String>();
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+
                 if (this.Token != "")
                     queryParams.Add("token", this.Token);
-                if (this.CIK != "")
-                    queryParams.Add("cik", this.CIK);
+
+                if (!string.IsNullOrEmpty(Token))
+                    queryParams.Add("token", this.Token);
+
+                if (this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
+                if (this.SIC.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("sic", string.Join(",", this.SIC));
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
+
                 if (this.Concept != "")
                     queryParams.Add("concept", this.Concept);
-
-                if (this.SIC != "")
-                    queryParams.Add("sic", this.SIC);
                 if (this.Map != "")
                     queryParams.Add("map", this.Map);
                 if (this.PrefixDimension != "")
                     queryParams.Add("prefix:dimension", this.PrefixDimension);
                 if (this.PrefixDimensionDefault != "")
                     queryParams.Add("prefix:dimension:default", this.PrefixDimensionDefault);
-
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
-
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
-
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
-
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
-
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
 
                 return queryParams;
 
@@ -237,23 +351,35 @@ namespace SevenShadow._28msec.SecXbrl
 
     public class FactTableForReportRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
         public Format Format { get; set; }
-        public string CIK { get; set; }
-        public string Ticker { get; set; }
-        public Tag Tag { get; set; }
-        public string SIC { get; set; }
-        public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
+        public string[] CIK { get; set; }
+        public string[] Ticker { get; set; }
+        public string[] Tag { get; set; }
+        public string[] SIC { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
         public string Report { get; set; }
-   
+        public string Token { get; set; }
+        
+        public HttpVerb HttpVerb { get; set; }
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
+        
+        
         public FactTableForReportRequest()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
-            
-
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            CIK = new string[] { };
+            Ticker = new string[] { };
+            Tag = new string[] { };
+            SIC = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
+    
         }
 
         public Dictionary<string, string> QueryParams
@@ -261,28 +387,24 @@ namespace SevenShadow._28msec.SecXbrl
             get
             {
                 var queryParams = new Dictionary<String, String>();
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
                 if (this.Token != "")
                     queryParams.Add("token", this.Token);
-                if (this.CIK != "")
-                    queryParams.Add("cik", this.CIK);
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
-                if (this.SIC != "")
-                    queryParams.Add("sic", this.SIC);
+                if(this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
+                if (this.SIC.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("sic", string.Join(",", this.SIC));
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
+                
                 if (this.Report != "")
                     queryParams.Add("report", this.Report);
-
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
-
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
-
-
 
                 return queryParams;
 
@@ -293,24 +415,38 @@ namespace SevenShadow._28msec.SecXbrl
 
     public class ReportElementsRequest : IRequest
     {
-        public string SecXbrlHost { get; set; }
-        public Format Format { get; set; }
-        public string Ticker { get; set; }
-
-        public string SIC { get; set; }
+         public Format Format { get; set; }
+         public string[] Tag { get; set; }
+         public string[] CIK { get; set; }
+        public string[] Ticker { get; set; }
+        public string[] SIC { get; set; }
+        public string[] FiscalYear { get; set; }
+        public string[] FiscalPeriod { get; set; }
+        public string[] AID { get; set; }
+        public bool OnlyNames { get; set; }
         public string Token { get; set; }
-        public string FiscalYear { get; set; }
-        public FiscalPeriod FiscalPeriod { get; set; }
-        public Tag Tag { get; set; }
-        public string AID { get; set; }
-        public string CIK { get; set; }
         
-        public bool OnlyNames{ get; set; }
-      
+        public HttpVerb HttpVerb { get; set; }
+        public string SecXbrlHost { get; set; }
+        public object Body { get; set; }
+        public Dictionary<string, string> HeaderParams { get; set; }
+
+
         public ReportElementsRequest()
         {
-            this.Tag = Tag.Default;
-            this.FiscalPeriod = FiscalPeriod;
+            Format = SecXbrlQueries.DefaultFormat;
+            Body = null;
+            HeaderParams = new Dictionary<string, string>();
+            HttpVerb = SecXbrlQueries.DefaultHttpVerb;
+            Tag = new string[] { };
+            CIK = new string[] { };
+            Ticker = new string[] { };
+            SIC = new string[] { };
+            FiscalYear = new string[] { };
+            FiscalPeriod = new string[] { };
+            AID = new string[] { };
+
+
         }
 
         public Dictionary<string, string> QueryParams
@@ -318,35 +454,32 @@ namespace SevenShadow._28msec.SecXbrl
             get
             {
                 var queryParams = new Dictionary<String, String>();
+                queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
                 if (this.Token != "")
                     queryParams.Add("token", this.Token);
-                if (this.AID != "")
-                    queryParams.Add("aid", this.AID);
-                if (this.CIK != "")
-                    queryParams.Add("cik", this.CIK);
-             
-                if (this.SIC != "")
-                    queryParams.Add("cik", this.SIC);
-             
-                if (this.Ticker != "")
-                    queryParams.Add("ticker", this.Ticker);
-
-                if (this.FiscalYear != "")
-                    queryParams.Add("fiscalYear", this.FiscalYear);
-
-                if (this.FiscalPeriod != _28msec.FiscalPeriod.FY)
-                    queryParams.Add("fiscalPeriod", SecXbrlQueries.GetEnumDescription(this.FiscalPeriod));
-
-                if (this.Format != _28msec.Format.Json)
-                    queryParams.Add("format", SecXbrlQueries.GetEnumDescription(this.Format));
-
-                if (this.Tag != _28msec.Tag.Default)
-                    queryParams.Add("tag", SecXbrlQueries.GetEnumDescription(this.Tag));
-
+                if(this.CIK.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("cik", string.Join(",", this.CIK));
+                if (this.Ticker.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("ticker", string.Join(",", this.Ticker));
+                if (this.Tag.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("tag", string.Join(",", this.Tag));
+                if (this.SIC.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("sic", string.Join(",", this.SIC));
+                if (this.FiscalYear.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalYear", string.Join(",", this.FiscalYear));
+                if (this.FiscalPeriod.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("fiscalPeriod", string.Join(",", this.FiscalPeriod));
+                
+               if (this.AID.Any(x => !string.IsNullOrEmpty(x)))
+                    queryParams.Add("aid", string.Join(",", this.AID));
+               
+                queryParams.Add("onlyNames", this.OnlyNames.ToString().ToLower());
                 return queryParams;
 
             }
         }
+
+        
 
     }
 }

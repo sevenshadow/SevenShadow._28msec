@@ -13,7 +13,20 @@ namespace SevenShadow._28msec.SecXbrl
  
     public class SecXbrlQueries
     {
+        #region Private Variables
+
         private ApiInvoker _invoker;
+
+        #endregion
+
+        #region Public Static Properties
+
+        public static Format DefaultFormat = Format.Json;
+        public static HttpVerb DefaultHttpVerb = HttpVerb.Post;
+
+        #endregion
+
+        #region Contructors
 
         public SecXbrlQueries()
         {
@@ -21,66 +34,70 @@ namespace SevenShadow._28msec.SecXbrl
 
         }
 
+        #endregion
+
         #region Entity Queries
+
+        public EntityResponse GetEntities(EntityRequest request)
+        {
+            ApiInvoker invoker = new ApiInvoker();
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Entities), GetEnumDescription(request.HttpVerb), request.QueryParams, request.Body, request.HeaderParams);
+            
+            if (response.success)
+            {
+                EntityResponse entityResponse = (EntityResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(EntityResponse));
+                entityResponse.RawApiResponse = response.RawApiResponse;
+                entityResponse.RawApiRequest = response.RawApiRequest;
+                return entityResponse;   
+            }
+            else
+            {
+                throw response.ApiException;
+            }
+        
+        }
+
+        public EntityResponse GetEntities(string secXbrlHost, string tag, string token = "")
+        {
+            EntityRequest request = new EntityRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.Tag = new string[] { tag } ;
+            request.Token = token;
+
+            return GetEntities(request);
+     
+        }
+
+        public EntityResponse GetEntitiesByCIK(string secXbrlHost, string cik, string token = "")
+        {
+            EntityRequest request = new EntityRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.CIK = new string[] { cik };
+            request.Token = token;
+
+            return GetEntities(request);
+        }
+
+        public EntityResponse GetEntitiesByTicker(string secXbrlHost, string ticker, string token = "")
+        {
+            EntityRequest request = new EntityRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.Ticker = new string[] { ticker };
+            request.Token = token;
+
+            return GetEntities(request);
+        }
 
         public EntityResponse GetIndexEntities(string secXbrlHost, EntityGroup entityGroup,  string token = "")
         {
-            return this.GetEntities(secXbrlHost, token, GetEnumDescription(entityGroup));
+            EntityRequest request = new EntityRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.Tag = new string[] { GetEnumDescription(entityGroup) };
+            request.Token = token;
+
+            return GetEntities(request);
         }
-
-        public EntityResponse GetEntities(string secXbrlHost, string token, string tag)
-        {
-            ApiInvoker invoker = new ApiInvoker();
-            
-            var queryParams = new Dictionary<String, String>();
-
-            queryParams.Add("token", token);
-            queryParams.Add("tag", tag);
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.Entities), "POST", queryParams, null, new Dictionary<string, string>());
-
-            EntityResponse entityResponse = (EntityResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(EntityResponse));
-            entityResponse.RawApiResponse = response.RawApiResponse;
-            entityResponse.RawApiRequest = response.RawApiRequest;
-
-            return entityResponse;
-        }
-
-        public EntityResponse GetEntitiesByCIK(string secXbrlHost, string token, string cik)
-        {
-            ApiInvoker invoker = new ApiInvoker();
-
-            var queryParams = new Dictionary<String, String>();
-
-            queryParams.Add("token", token);
-            queryParams.Add("cik", cik);
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.Entities), "POST", queryParams, null, new Dictionary<string, string>());
-
-            EntityResponse entityResponse = (EntityResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(EntityResponse));
-            entityResponse.RawApiResponse = response.RawApiResponse;
-            entityResponse.RawApiRequest = response.RawApiRequest;
-
-            return entityResponse;
-        }
-
-        public EntityResponse GetEntitiesByTicker(string secXbrlHost, string token, string ticker)
-        {
-            ApiInvoker invoker = new ApiInvoker();
-
-            var queryParams = new Dictionary<String, String>();
-
-            queryParams.Add("token", token);
-            queryParams.Add("ticker", ticker);
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.Entities), "POST", queryParams, null, new Dictionary<string, string>());
-
-            EntityResponse entityResponse = (EntityResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(EntityResponse));
-            entityResponse.RawApiResponse = response.RawApiResponse;
-            entityResponse.RawApiRequest = response.RawApiRequest;
-            return entityResponse;
-        }
-
+    
         #endregion
 
         #region Filings Queries
@@ -89,8 +106,8 @@ namespace SevenShadow._28msec.SecXbrl
         {
             ApiInvoker invoker = new ApiInvoker();
 
-            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Filings), "POST", 
-                request.QueryParams, null, new Dictionary<string, string>());
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Filings), GetEnumDescription(request.HttpVerb),
+                request.QueryParams, request.Body, request.HeaderParams);
 
             if (response.success)
             {
@@ -113,160 +130,159 @@ namespace SevenShadow._28msec.SecXbrl
             ApiInvoker invoker = new ApiInvoker();
 
             var queryParams = new Dictionary<String, String>();
-        
-            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Components), "POST", request.QueryParams, null, new Dictionary<string, string>());
 
-            ComponentResponse filingResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
-            filingResponse.RawApiResponse = response.RawApiResponse;
-            filingResponse.RawApiRequest = response.RawApiRequest;
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Components),
+                GetEnumDescription(request.HttpVerb), request.QueryParams, request.Body, request.HeaderParams);
 
-            return filingResponse;
+            if (response.success)
+            {
+                ComponentResponse filingResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
+                filingResponse.RawApiResponse = response.RawApiResponse;
+                filingResponse.RawApiRequest = response.RawApiRequest;
+
+                return filingResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
         }
 
-        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string componentId, string token = "", Format format = Format.Json)
+        #endregion
+
+        #region Fact Table for a Component Queries
+
+        public ComponentResponse GetFactTableForComponent(ComponentDetailRequest request)
         {
             ApiInvoker invoker = new ApiInvoker();
 
-            var queryParams = new Dictionary<String, String>();
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, 
+                GetEnumDescription(QueryEndPoints.FactableForComponent),
+                GetEnumDescription(request.HttpVerb), request.QueryParams, request.Body, request.HeaderParams);
 
-            if (token != "")
-                queryParams.Add("token", token);
-
-            queryParams.Add("cid", componentId);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.FactableForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentResponse componentResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
-            componentResponse.RawApiResponse = response.RawApiResponse;
-            componentResponse.RawApiRequest = response.RawApiRequest;
-
-            return componentResponse;
+            if (response.success)
+            {
+                ComponentResponse componentResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
+                componentResponse.RawApiResponse = response.RawApiResponse;
+                componentResponse.RawApiRequest = response.RawApiRequest;
+                return componentResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
         }
 
-        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string accessionNumber, string disclosure, string token = "", Format format = Format.Json)
+        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string accessionNumber,
+           string token = "", Format format = Format.Json)
+        {
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.AID = new string[] { accessionNumber };
+             request.Token = token;
+            request.Format = format;
+
+            return GetFactTableForComponent(request);
+
+        }
+
+        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string accessionNumber, string disclosure, 
+            string token = "", Format format = Format.Json)
+        {
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.AID = new string[] { accessionNumber };
+            request.Disclosure = new string[] { disclosure };
+            request.Token = token;
+            request.Format = format;
+
+            return GetFactTableForComponent(request);
+            
+        }
+
+        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string cik, string fiscalYear, 
+            string fiscalPeriod, string disclosure, string token = "", Format format = Format.Json)
+        {
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.CIK = new string[] { cik };
+            request.FiscalYear = new string[] { fiscalYear };
+            request.FiscalPeriod = new string[] { fiscalPeriod };
+            request.Disclosure = new string[] { disclosure };
+            request.Token = token;
+            request.Format = format;
+
+            return GetFactTableForComponent(request);
+         
+        }
+
+        #endregion
+
+        #region Model structure for a Component Queries
+
+        public ComponentModelResponse GetModelStructureForComponent(ComponentDetailRequest request)
         {
             ApiInvoker invoker = new ApiInvoker();
 
-            var queryParams = new Dictionary<String, String>();
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost,
+                GetEnumDescription(QueryEndPoints.ModelStructureForComponent),
+                GetEnumDescription(request.HttpVerb), request.QueryParams, request.Body, request.HeaderParams);
 
-            if (token != "")
-                queryParams.Add("token", token);
+            if (response.success)
+            {
+                ComponentModelResponse modelResponse = (ComponentModelResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentModelResponse));
+                modelResponse.RawApiResponse = response.RawApiResponse;
+                modelResponse.RawApiRequest = response.RawApiRequest;
 
-            queryParams.Add("aid", accessionNumber);
-            queryParams.Add("disclosure", disclosure);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.FactableForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentResponse componentResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
-            componentResponse.RawApiResponse = response.RawApiResponse;
-            componentResponse.RawApiRequest = response.RawApiRequest;
-
-            return componentResponse;
+                return modelResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
         }
 
-        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string cik, int fiscalYear, string fiscalPeriod, string disclosure, string token = "", Format format = Format.Json)
+        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string cid, string token = "", Format format = Format.Json)
         {
-            ApiInvoker invoker = new ApiInvoker();
 
-            var queryParams = new Dictionary<String, String>();
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.CID = new string[] { cid };
+            request.Token = token;
+            request.Format = format;
 
-            if (token != "")
-                queryParams.Add("token", token);
+            return GetModelStructureForComponent(request);
 
-            queryParams.Add("cik", cik);
-            queryParams.Add("fiscalYear", fiscalYear.ToString());
-            queryParams.Add("fiscalPeriod", fiscalPeriod);
-            queryParams.Add("disclosure", disclosure);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.FactableForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentResponse componentResponse = (ComponentResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentResponse));
-            componentResponse.RawApiResponse = response.RawApiResponse;
-            componentResponse.RawApiRequest = response.RawApiRequest;
-
-            return componentResponse;
         }
 
-        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string componentId, string token = "", Format format = Format.Json)
+        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string aid, string disclosure, 
+            string token = "", Format format = Format.Json)
         {
-            ApiInvoker invoker = new ApiInvoker();
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.AID = new string[] { aid };
+            request.Disclosure = new string[] { disclosure };
+            request.Token = token;
+            request.Format = format;
 
-            var queryParams = new Dictionary<String, String>();
-
-            if (token != "")
-                queryParams.Add("token", token);
-
-            queryParams.Add("cid", componentId);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.ModelStructureForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentModelResponse modelResponse = (ComponentModelResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentModelResponse));
-            modelResponse.RawApiResponse = response.RawApiResponse;
-            modelResponse.RawApiRequest = response.RawApiRequest;
-
-            return modelResponse;
+            return GetModelStructureForComponent(request);
+           
         }
 
-        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string accessionNumber, string disclosure, string token = "", Format format = Format.Json)
+        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string cik, 
+            string fiscalYear, string fiscalPeriod, string disclosure, string token = "", Format format = Format.Json)
         {
-            ApiInvoker invoker = new ApiInvoker();
+            ComponentDetailRequest request = new ComponentDetailRequest();
+            request.SecXbrlHost = secXbrlHost;
+            request.CIK = new string[] { cik };
+            request.FiscalYear = new string[] { fiscalYear };
+            request.FiscalPeriod = new string[] { fiscalPeriod };
+            request.Disclosure = new string[] { disclosure };
+            request.Token = token;
+            request.Format = format;
 
-            var queryParams = new Dictionary<String, String>();
-
-            if (token != "")
-                queryParams.Add("token", token);
-            queryParams.Add("aid", accessionNumber);
-            queryParams.Add("disclosure", disclosure);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.ModelStructureForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentModelResponse modelResponse = (ComponentModelResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentModelResponse));
-            modelResponse.RawApiResponse = response.RawApiResponse;
-            modelResponse.RawApiRequest = response.RawApiRequest;
-
-            return modelResponse;
-        }
-
-        public ComponentModelResponse GetModelStructureForComponent(string secXbrlHost, string cik, int fiscalYear, string fiscalPeriod, string disclosure, string token = "", Format format = Format.Json)
-        {
-            ApiInvoker invoker = new ApiInvoker();
-
-            var queryParams = new Dictionary<String, String>();
-
-            if (token != "")
-                queryParams.Add("token", token);
-
-            queryParams.Add("cik", cik);
-            queryParams.Add("fiscalYear", fiscalYear.ToString());
-            queryParams.Add("fiscalPeriod", fiscalPeriod);
-            queryParams.Add("disclosure", disclosure);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.ModelStructureForComponent), "POST", queryParams, null, new Dictionary<string, string>());
-
-            ComponentModelResponse modelResponse = (ComponentModelResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(ComponentModelResponse));
-            modelResponse.RawApiResponse = response.RawApiResponse;
-            modelResponse.RawApiRequest = response.RawApiRequest;
-
-            return modelResponse;
-        }
-
-        public FactResponse GetFacts(FactRequest request)
-        {
-            ApiInvoker invoker = new ApiInvoker();
-
-            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Facts), "POST", request.QueryParams, null, new Dictionary<string, string>());
-
-            FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
-            modelResponse.RawApiResponse = response.RawApiResponse;
-            modelResponse.RawApiRequest = response.RawApiRequest;
-
-            return modelResponse;
+            return GetModelStructureForComponent(request);
+           
         }
 
         #endregion
@@ -277,43 +293,85 @@ namespace SevenShadow._28msec.SecXbrl
         {
             ApiInvoker invoker = new ApiInvoker();
 
-            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.FactTableForReport), "POST", request.QueryParams, null, new Dictionary<string, string>());
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.FactTableForReport), GetEnumDescription(request.HttpVerb),
+                request.QueryParams, request.Body, request.HeaderParams);
 
-            FactResponse factResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
-            factResponse.RawApiResponse = response.RawApiResponse;
-            factResponse.RawApiRequest = response.RawApiRequest;
+            if (response.success)
+            {
+                FactResponse factResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
+                factResponse.RawApiResponse = response.RawApiResponse;
+                factResponse.RawApiRequest = response.RawApiRequest;
 
-            return factResponse;
+                return factResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
         }
 
+        #endregion
+
+        #region Get Facts Queries
+
+        public FactResponse GetFacts(FactRequest request)
+        {
+            ApiInvoker invoker = new ApiInvoker();
+
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.Facts), GetEnumDescription(request.HttpVerb),
+                request.QueryParams, request.Body, request.HeaderParams);
+
+            if (response.success)
+            {
+                FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
+                modelResponse.RawApiResponse = response.RawApiResponse;
+                modelResponse.RawApiRequest = response.RawApiRequest;
+
+                return modelResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
+        }
 
         #endregion
 
         #region Report Elements
 
-        public FactResponse GetReportElements(string secXbrlHost, string accessionNumber, string token = "", bool onlyNames = false, Format format = Format.Json)
+        public FactResponse GetReportElements(ReportElementsRequest request)
         {
             ApiInvoker invoker = new ApiInvoker();
-            var queryParams = new Dictionary<String, String>();
 
-            if (token != "")
-                queryParams.Add("token", token);
-            queryParams.Add("aid", accessionNumber);
-            queryParams.Add("format", SecXbrlQueries.GetEnumDescription(format));
-            queryParams.Add("onlyNames", onlyNames.ToString().ToLower());
+            ApiResponse response = invoker.InvokeAPI(request.SecXbrlHost, GetEnumDescription(QueryEndPoints.ReportElements), GetEnumDescription(request.HttpVerb),
+                request.QueryParams, request.Body, request.HeaderParams);
 
+            if (response.success)
+            {
+                FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
+                modelResponse.RawApiResponse = response.RawApiResponse;
+                modelResponse.RawApiRequest = response.RawApiRequest;
 
-            ApiResponse response = invoker.InvokeAPI(secXbrlHost, GetEnumDescription(QueryEndPoints.ReportElements), "POST", queryParams, null, new Dictionary<string, string>());
+                return modelResponse;
+            }
+            else
+            {
+                throw response.ApiException;
+            }
+        }
+        public FactResponse GetReportElements(string secXbrlHost, string aid, string token = "", bool onlyNames = false, Format format = Format.Json)
+        {
+            ReportElementsRequest request = new ReportElementsRequest();
+            request.AID = new string[] { aid };
+            request.SecXbrlHost = secXbrlHost;
+            request.Token = token;
+            request.OnlyNames = onlyNames;
+            request.Format = format;
 
-            FactResponse modelResponse = (FactResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FactResponse));
-            modelResponse.RawApiResponse = response.RawApiResponse;
-            modelResponse.RawApiRequest = response.RawApiRequest;
-
-            return modelResponse;
+            return GetReportElements(request);
         }
 
         #endregion
-
 
         #region Helper Methods
 

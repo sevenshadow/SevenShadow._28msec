@@ -7,6 +7,19 @@ using System.Threading.Tasks;
 
 namespace SevenShadow._28msec
 {
+    public enum HttpVerb
+    {
+        [Description("DELETE")]
+        Delete = 0,
+        [Description("GET")]
+        Get = 1,
+        [Description("POST")]
+        Post = 2,
+        [Description("PUT")]
+        Put = 3,
+      
+        
+    }
     
         public enum FiscalPeriod
         {
