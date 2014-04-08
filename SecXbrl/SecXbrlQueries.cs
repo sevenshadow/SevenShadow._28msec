@@ -173,12 +173,12 @@ namespace SevenShadow._28msec.SecXbrl
             }
         }
 
-        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string accessionNumber,
+        public ComponentResponse GetFactTableForComponent(string secXbrlHost, string cid,
            string token = "", Format format = Format.Json)
         {
             ComponentDetailRequest request = new ComponentDetailRequest();
             request.SecXbrlHost = secXbrlHost;
-            request.AID = new string[] { accessionNumber };
+            request.CID = new string[] { cid };
              request.Token = token;
             request.Format = format;
 
