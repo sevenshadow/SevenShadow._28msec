@@ -37,7 +37,14 @@ namespace SevenShadow._28msec
             Q4 = 5,
           
         }
+        public enum FiscalYear
+        {
+            [Description("ALL")]
+            All = 0,
+            [Description("LATEST")]
+            Latest = 1
 
+        }
         public enum Format
         {
             [Description("json")]

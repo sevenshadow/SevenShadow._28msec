@@ -217,7 +217,8 @@ namespace SevenShadow._28msec.SecXbrl
         public string[] FiscalPeriod { get; set; }
         public string[] Disclosure { get; set; }
         public string Token { get; set; }
-       
+        public string DrillDown { get; set; }
+        public string Map { get; set; }
         public string SecXbrlHost { get; set; }
         public object Body { get; set; }
         public Dictionary<string, string> HeaderParams { get; set; }
@@ -262,6 +263,11 @@ namespace SevenShadow._28msec.SecXbrl
                     queryParams.Add("cid", string.Join(",", this.CID));
                 if (this.Disclosure.Any(x => !string.IsNullOrEmpty(x)))
                     queryParams.Add("disclosure", string.Join(",", this.Disclosure));
+
+                if (this.DrillDown != string.Empty)
+                    queryParams.Add("drilldown", this.DrillDown);
+                if (this.Map != string.Empty)
+                    queryParams.Add("map", this.Map);
 
                 
                 return queryParams;

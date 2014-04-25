@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 
 namespace SevenShadow._28msec.SecXbrl
 {
- 
     public class SecXbrlQueries
     {
         #region Private Variables
@@ -113,6 +112,7 @@ namespace SevenShadow._28msec.SecXbrl
             {
                 FilingResponse filingResponse = (FilingResponse)JsonConvert.DeserializeObject(response.RawApiResponse, typeof(FilingResponse));
                 filingResponse.RawApiResponse = response.RawApiResponse;
+                filingResponse.RawApiRequest = response.RawApiRequest;
                 return filingResponse;
             }
             else

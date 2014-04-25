@@ -41,6 +41,7 @@ namespace SevenShadow._28msec.SecXbrl
         public string CIK { get; set; }
         public string FormType { get; set; }
         public string FiscalPeriod { get; set; }
+        public string FiscalYear { get; set; }
 
         public List<SecFiling> Archives { get; set; }
         public List<FactTableItem> FactTable { get; set; }

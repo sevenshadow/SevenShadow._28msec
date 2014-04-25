@@ -60,8 +60,24 @@ namespace SevenShadow._28msec.SecXbrl
 
     
     }
-   
 
+    public enum DisclosureTypes
+    {
+        [Description("BalanceSheet")]
+        BalanceSheet = 0,
+
+        [Description("SP500")]
+        SP500 = 1,
+
+        [Description("FORTUNE100")]
+        Fortune100 = 2,
+
+        [Description("PJI")]
+        PJI = 3,
+
+
+    }
+ 
     
  
 }

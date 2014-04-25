@@ -15,7 +15,9 @@ namespace SevenShadow._28msec.SecXbrl
         public string FormType { get; set; }
         public string FiscalPeriod { get; set; }
         public List<SecFilingComponent> Components { get; set; }
-       
+        public DateTime Accepted { get; set; }
+        public string SECFilingPage { get; set; }
+        public string XBRLInstanceURL { get; set; }
         
     }
 }
